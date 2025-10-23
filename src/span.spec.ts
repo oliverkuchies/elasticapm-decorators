@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import apm, { Span } from "elastic-apm-node";
+import apm, { type Span } from "elastic-apm-node";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ElasticSpan } from "./span";
 
 class TestClass {

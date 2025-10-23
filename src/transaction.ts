@@ -1,11 +1,11 @@
 import apm from "elastic-apm-node";
 
 export function ElasticTransaction(name: string, type: string): any {
-	return function (
+	return (
 		target: Object,
 		propertyKey: string | symbol,
 		descriptor: TypedPropertyDescriptor<any>,
-	): TypedPropertyDescriptor<unknown> | void {
+	): TypedPropertyDescriptor<unknown> | void => {
 		if (!descriptor || typeof descriptor.value !== "function") {
 			throw new Error("ElasticTransaction can only be applied to methods.");
 		}

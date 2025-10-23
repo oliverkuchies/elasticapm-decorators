@@ -5,11 +5,11 @@ export function ElasticSpan(
 	type: string,
 	subtype: string = "",
 ): any {
-	return function (
+	return (
 		target: unknown,
 		propertyKey: string,
 		descriptor: PropertyDescriptor,
-	) {
+	) => {
 		const originalMethod = descriptor.value;
 
 		descriptor.value = async function (...args: unknown[]) {

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import apm, { Transaction } from "elastic-apm-node";
+import apm, { type Transaction } from "elastic-apm-node";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ElasticTransaction } from "./transaction";
 
 class TestClass {
