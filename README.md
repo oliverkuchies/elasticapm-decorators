@@ -14,7 +14,7 @@
   </a>
 </p>
 
-# 🚀 ElasticAPM Decorators for TypeScript
+# ElasticAPM Decorators for TypeScript
 
 Supercharge your TypeScript methods with effortless performance monitoring and distributed tracing using Elastic APM! 
 
@@ -68,14 +68,14 @@ class UserService {
 
 ---
 
-## 🛠 How It Works
+## How It Works
 - **@ElasticTransaction**: Wraps your async method in an Elastic APM transaction. Tracks duration, errors, and outcome.
 - **@ElasticSpan**: Wraps your async method in a span. Perfect for sub-operations (e.g., DB queries, external calls).
 - **Automatic error handling**: Errors are captured and labeled in APM.
 
 ---
 
-## 🧪 Testing
+## Testing
 
 This package is fully tested with [Vitest](https://vitest.dev/). To run tests:
 
@@ -85,7 +85,7 @@ npm test
 
 ---
 
-## 📚 API Reference
+## API Reference
 
 ### `@ElasticTransaction(name: string, type: string)`
 - **name**: Transaction name (e.g., 'user-signup')
@@ -96,29 +96,11 @@ npm test
 - **type**: Span type (e.g., 'db', 'external')
 - **subtype**: (Optional) Span subtype (e.g., 'postgres', 'http')
 
----
-
-## 💡 Why Use This?
+## Why Use This?
 - **Save time**: No more manual APM boilerplate.
 - **Consistency**: Every method is traced the same way.
 - **Observability**: Instantly see performance bottlenecks and errors in Elastic APM.
 
----
-
-## 📝 License
-MIT — Made with ❤️ by Oliver Kucharzewski
-
----
-
-## 🌟 Contributing
+## Contributing
 Pull requests, issues, and stars are always welcome! For major changes, please open an issue first to discuss what you would like to change.
 
----
-
-## 📣 Stay in Touch
-- [GitHub Issues](https://github.com/oliverkuchies/elasticapm-decorators/issues)
-- [Elastic APM Docs](https://www.elastic.co/guide/en/apm/agent/nodejs/current/index.html)
-
----
-
-Happy tracing! 🚀
