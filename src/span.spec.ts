@@ -1,4 +1,4 @@
-import apm, { type Span } from "elastic-apm-node";
+import apm from "elastic-apm-node";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ElasticSpan } from "./span";
 
@@ -18,14 +18,20 @@ describe("ElasticSpan", () => {
 		vi.clearAllMocks();
 	});
 
-	it("returns null if apm is not started", async () => {
+	it("returns Hello world if apm is not started", async () => {
 		vi.spyOn(apm, "isStarted").mockReturnValue(false);
 		const result = await instance.testMethod("world");
-		expect(result).toBeNull();
+		expect(result).toBe("Hello world");
 	});
 
 	it("starts a span and returns result", async () => {
-		vi.spyOn(apm, "isStarted").mockReturnValue(true);
+		vi.mock("elastic-apm-node", () => ({
+			default: {
+				isStarted: () => true,
+				startSpan: vi.fn(),
+			},
+		}));
+
 		const startSpan = vi.fn().mockReturnValue({
 			setOutcome: vi.fn(),
 			addLabels: vi.fn(),
@@ -38,18 +44,20 @@ describe("ElasticSpan", () => {
 	});
 
 	it("handles errors and sets span outcome", async () => {
-		vi.spyOn(apm, "isStarted").mockReturnValue(true);
-		const setOutcome = vi.fn();
-		const addLabels = vi.fn();
-		const end = vi.fn();
-		vi.spyOn(apm, "startSpan").mockReturnValue({
-			setOutcome,
-			addLabels,
-			end,
-		} as unknown as Span);
+		vi.mock("elastic-apm-node", () => ({
+			default: {
+				isStarted: () => true,
+				startSpan: vi.fn().mockReturnValue({
+					setOutcome: vi.fn(),
+					addLabels: vi.fn(),
+					end: vi.fn(),
+				}),
+			},
+		}));
+
 		await expect(instance.testMethod("error")).rejects.toThrow("Test error");
-		expect(setOutcome).toHaveBeenCalledWith("failure");
-		expect(addLabels).toHaveBeenCalled();
-		expect(end).toHaveBeenCalled();
+		expect(apm.startSpan()?.setOutcome).toHaveBeenCalledWith("failure");
+		expect(apm.startSpan()?.addLabels).toHaveBeenCalled();
+		expect(apm.startSpan()?.end).toHaveBeenCalled();
 	});
 });

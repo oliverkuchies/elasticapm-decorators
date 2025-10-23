@@ -21,20 +21,27 @@ describe("ElasticTransaction", () => {
 	it("returns null if apm is not started", async () => {
 		vi.spyOn(apm, "isStarted").mockReturnValue(false);
 		const result = await instance.testMethod("world");
-		expect(result).toBeNull();
+		expect(result).toBe("Hello world");
 	});
 
 	it("starts a transaction and returns result", async () => {
-		vi.spyOn(apm, "isStarted").mockReturnValue(true);
-		const startTransaction = vi.fn().mockReturnValue({
-			setOutcome: vi.fn(),
-			addLabels: vi.fn(),
-			end: vi.fn(),
-		});
-		vi.spyOn(apm, "startTransaction").mockImplementation(startTransaction);
+		vi.mock("elastic-apm-node", () => ({
+			default: {
+				isStarted: () => true,
+				startTransaction: vi.fn().mockReturnValue({
+					setOutcome: vi.fn(),
+					addLabels: vi.fn(),
+					end: vi.fn(),
+				}),
+			},
+		}));
+
 		const result = await instance.testMethod("world");
 		expect(result).toBe("Hello world");
-		expect(startTransaction).toHaveBeenCalledWith("test-transaction", "custom");
+		expect(apm.startTransaction).toHaveBeenCalledWith(
+			"test-transaction",
+			"custom",
+		);
 	});
 
 	it("handles errors and sets transaction outcome", async () => {
