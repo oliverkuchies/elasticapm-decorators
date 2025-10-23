@@ -10,7 +10,7 @@
     <img src="https://img.shields.io/github/license/oliverkuchies/elasticapm-decorators?style=flat-square" alt="License" />
   </a>
   <a href="https://github.com/oliverkuchies/elasticapm-decorators/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/oliverkuchies/elasticapm-decorators/ci.yml?branch=main&style=flat-square" alt="Build Status" />
+    <img src="https://img.shields.io/github/actions/workflow/status/oliverkuchies/elasticapm-decorators/main.yml?branch=main&style=flat-square" alt="Build Status" />
   </a>
 </p>
 

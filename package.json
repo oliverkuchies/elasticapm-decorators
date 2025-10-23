@@ -9,7 +9,7 @@
 		"lint": "biome check ./src && biome format ./src",
 		"lint:fix": "biome check --write --unsafe ./src && biome format ./src --write",
 		"build": "tsc",
-		"prepare": "npm run build"
+    "prepare": "npm run build"
 	},
 	"repository": {
 		"type": "git",
