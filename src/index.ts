@@ -1,2 +1,2 @@
 export * from "./span";
-export * from './transaction';
+export * from "./transaction";

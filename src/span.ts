@@ -1,6 +1,10 @@
 import apm from "elastic-apm-node";
 
-export function ElasticSpan(name: string, type: string, subtype: string = "") : any {
+export function ElasticSpan(
+	name: string,
+	type: string,
+	subtype: string = "",
+): any {
 	return function (
 		target: unknown,
 		propertyKey: string,
