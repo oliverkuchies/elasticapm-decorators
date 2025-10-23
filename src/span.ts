@@ -1,11 +1,16 @@
 import apm from "elastic-apm-node";
 
-export function ElasticSpan(name: string, type: string, subtype: string = "") : any {
-	return function (
-		target: unknown,
-		propertyKey: string,
+export function ElasticSpan(
+	name: string,
+	type: string,
+	subtype: string = "",
+	// biome-ignore lint/suspicious/noExplicitAny: Decorator requires any return type to work with various methods
+): any {
+	return (
+		_target: unknown,
+		_propertyKey: string,
 		descriptor: PropertyDescriptor,
-	) {
+	) => {
 		const originalMethod = descriptor.value;
 
 		descriptor.value = async function (...args: unknown[]) {
