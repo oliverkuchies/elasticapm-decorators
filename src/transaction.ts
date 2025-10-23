@@ -1,25 +1,25 @@
 import apm from "elastic-apm-node";
-
+// biome-ignore lint/suspicious/noExplicitAny: Decorator requires any return type to work with various methods
 export function ElasticTransaction(name: string, type: string): any {
 	return (
-		target: Object,
-		propertyKey: string | symbol,
-		descriptor: TypedPropertyDescriptor<any>,
-	): TypedPropertyDescriptor<unknown> | void => {
+		_target: unknown,
+		_propertyKey: string | symbol,
+		descriptor: TypedPropertyDescriptor<unknown>,
+	): TypedPropertyDescriptor<unknown> | undefined => {
 		if (!descriptor || typeof descriptor.value !== "function") {
 			throw new Error("ElasticTransaction can only be applied to methods.");
 		}
 		const originalMethod = descriptor.value;
 
-		descriptor.value = async function (...args: any[]) {
+		descriptor.value = async function (...args: unknown[]) {
 			if (!apm.isStarted()) {
 				return null;
 			}
 
 			const transaction = apm.startTransaction(name, type);
 			const startTime = Date.now();
-			let result: any;
-			let error: any;
+			let result: unknown;
+			let error: unknown;
 
 			try {
 				result = await originalMethod.apply(this, args);

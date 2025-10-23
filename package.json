@@ -6,8 +6,8 @@
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"test": "vitest",
-		"lint": "biome check ./src && biome format ./src --check",
-		"lint:fix": "biome check --fix ./src && biome format ./src --write",
+		"lint": "biome check ./src && biome format ./src",
+		"lint:fix": "biome check --write --unsafe ./src && biome format ./src --write",
 		"build": "tsc",
 		"prepare": "npm run build"
 	},

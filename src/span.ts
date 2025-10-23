@@ -4,10 +4,11 @@ export function ElasticSpan(
 	name: string,
 	type: string,
 	subtype: string = "",
+	// biome-ignore lint/suspicious/noExplicitAny: Decorator requires any return type to work with various methods
 ): any {
 	return (
-		target: unknown,
-		propertyKey: string,
+		_target: unknown,
+		_propertyKey: string,
 		descriptor: PropertyDescriptor,
 	) => {
 		const originalMethod = descriptor.value;
