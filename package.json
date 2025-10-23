@@ -1,6 +1,6 @@
 {
 	"name": "elasticapm-decorators",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"description": "ElasticAPM Decorators built for Typescript methods to assess their performance",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -20,7 +20,8 @@
 		"elastic",
 		"typescript",
 		"performance",
-		"monitoring"
+		"monitoring",
+    "decorators"
 	],
 	"author": "Oliver Kucharzewski",
 	"license": "MIT",

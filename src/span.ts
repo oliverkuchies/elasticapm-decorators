@@ -13,11 +13,11 @@ export function ElasticSpan(
 	) => {
 		const originalMethod = descriptor.value;
 
-		descriptor.value = async function (...args: unknown[]) {
-			if (!apm.isStarted()) {
-				return null;
-			}
+		if (!apm.isStarted()) {
+			return descriptor;
+		}
 
+		descriptor.value = async function (...args: unknown[]) {
 			const span = apm.startSpan(name, type, subtype);
 
 			const startTime = Date.now();

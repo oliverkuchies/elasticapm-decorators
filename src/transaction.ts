@@ -11,11 +11,11 @@ export function ElasticTransaction(name: string, type: string): any {
 		}
 		const originalMethod = descriptor.value;
 
-		descriptor.value = async function (...args: unknown[]) {
-			if (!apm.isStarted()) {
-				return null;
-			}
+		if (!apm.isStarted()) {
+			return descriptor;
+		}
 
+		descriptor.value = async function (...args: unknown[]) {
 			const transaction = apm.startTransaction(name, type);
 			const startTime = Date.now();
 			let result: unknown;
