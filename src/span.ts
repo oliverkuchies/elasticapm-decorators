@@ -17,32 +17,64 @@ export function ElasticSpan(
 			return descriptor;
 		}
 
-		descriptor.value = async function (...args: unknown[]) {
+		descriptor.value = function (...args: unknown[]) {
 			const span = apm.startSpan(name, type, subtype);
 
+			if (!span) {
+				return originalMethod.apply(this, args);
+			}
+
 			const startTime = Date.now();
-			let result: unknown;
 			let error: unknown;
 
 			try {
-				result = await originalMethod.apply(this, args);
-			} catch (err) {
-				error = err;
-				if (span) {
-					span.setOutcome(error ? "failure" : "success");
+				const result = originalMethod.apply(this, args);
+				if (result && typeof result.then === "function") {
+					// Async
+					return result
+						.then((res: unknown) => {
+							span.setOutcome("success");
+							span.addLabels({
+								duration: Date.now() - startTime,
+								error: "none",
+							});
+							span.end();
+							return res;
+						})
+						.catch((err: unknown) => {
+							error = err;
+							span.setOutcome(error ? "failure" : "success");
+							span.addLabels({
+								duration: Date.now() - startTime,
+								error: error ? String(error) : "none",
+							});
+							span.end();
+							throw err;
+						});
+				} else {
+					// Sync
+					span.setOutcome("success");
 					span.addLabels({
 						duration: Date.now() - startTime,
-						error: error ? String(error) : "none",
+						error: "none",
 					});
-
 					span.end();
+					return result;
 				}
-
+			} catch (err) {
+				error = err;
+				span.setOutcome(error ? "failure" : "success");
+				span.addLabels({
+					duration: Date.now() - startTime,
+					error: error ? String(error) : "none",
+				});
+				span.end();
 				throw err;
 			}
-
-			return result;
 		};
+
 		return descriptor;
 	};
 }
+
+export { apm };

@@ -6,10 +6,9 @@ export function ElasticTransaction(name: string, type: string): any {
 		_propertyKey: string | symbol,
 		descriptor: TypedPropertyDescriptor<unknown>,
 	): TypedPropertyDescriptor<unknown> | undefined => {
-		if (!descriptor || typeof descriptor.value !== "function") {
-			throw new Error("ElasticTransaction can only be applied to methods.");
-		}
-		const originalMethod = descriptor.value;
+		const originalMethod = descriptor.value as (
+			...args: unknown[]
+		) => Promise<unknown>;
 
 		if (!apm.isStarted()) {
 			return descriptor;
@@ -17,6 +16,11 @@ export function ElasticTransaction(name: string, type: string): any {
 
 		descriptor.value = async function (...args: unknown[]) {
 			const transaction = apm.startTransaction(name, type);
+
+			if (!transaction) {
+				return originalMethod.apply(this, args);
+			}
+
 			const startTime = Date.now();
 			let result: unknown;
 			let error: unknown;
@@ -25,14 +29,12 @@ export function ElasticTransaction(name: string, type: string): any {
 				result = await originalMethod.apply(this, args);
 			} catch (err) {
 				error = err;
-				if (transaction) {
-					transaction.setOutcome(error ? "failure" : "success");
-					transaction.addLabels({
-						duration: Date.now() - startTime,
-						error: error ? String(error) : "none",
-					});
-					transaction.end();
-				}
+				transaction.setOutcome(error ? "failure" : "success");
+				transaction.addLabels({
+					duration: Date.now() - startTime,
+					error: error ? String(error) : "none",
+				});
+				transaction.end();
 				throw err;
 			}
 			return result;
