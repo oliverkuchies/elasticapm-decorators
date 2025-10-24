@@ -1,6 +1,6 @@
 {
 	"name": "elasticapm-decorators",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "ElasticAPM Decorators built for Typescript methods to assess their performance",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
 		"lint": "biome check ./src && biome format ./src",
 		"lint:fix": "biome check --write --unsafe ./src && biome format ./src --write",
 		"build": "tsc",
-    "prepare": "npm run build"
+		"prepare": "npm run build"
 	},
 	"repository": {
 		"type": "git",
@@ -21,7 +21,7 @@
 		"typescript",
 		"performance",
 		"monitoring",
-    "decorators"
+		"decorators"
 	],
 	"author": "Oliver Kucharzewski",
 	"license": "MIT",
@@ -30,8 +30,9 @@
 	},
 	"homepage": "https://github.com/oliverkuchies/elasticapm-decorators#readme",
 	"devDependencies": {
-		"vitest": "^4.0.1",
-		"@biomejs/biome": "^2.2.7"
+		"@biomejs/biome": "^2.2.7",
+		"@vitest/coverage-v8": "^4.0.1",
+		"vitest": "^4.0.1"
 	},
 	"peerDependencies": {
 		"elastic-apm-node": "^=4.0.0"

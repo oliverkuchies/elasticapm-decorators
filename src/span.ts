@@ -20,29 +20,40 @@ export function ElasticSpan(
 		descriptor.value = async function (...args: unknown[]) {
 			const span = apm.startSpan(name, type, subtype);
 
+			if (!span) {
+				return originalMethod.apply(this, args);
+			}
+
 			const startTime = Date.now();
 			let result: unknown;
 			let error: unknown;
 
 			try {
 				result = await originalMethod.apply(this, args);
+				span.setOutcome("success");
+				span.addLabels({
+					duration: Date.now() - startTime,
+					error: "none",
+				});
+				span.end();
+
+				return result;
 			} catch (err) {
 				error = err;
-				if (span) {
-					span.setOutcome(error ? "failure" : "success");
-					span.addLabels({
-						duration: Date.now() - startTime,
-						error: error ? String(error) : "none",
-					});
+				span.setOutcome(error ? "failure" : "success");
+				span.addLabels({
+					duration: Date.now() - startTime,
+					error: error ? String(error) : "none",
+				});
 
-					span.end();
-				}
+				span.end();
 
 				throw err;
 			}
-
-			return result;
 		};
+
 		return descriptor;
 	};
 }
+
+export { apm };
